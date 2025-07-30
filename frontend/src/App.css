@@ -1,0 +1,145 @@
+/* Japanese Traditional Design Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+  background-color: #f8f7f4;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(220, 53, 69, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(33, 37, 41, 0.05) 0%, transparent 50%);
+  color: #2c2c2c;
+  line-height: 1.6;
+}
+
+.App {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Washi Paper Background Effect */
+.washi-bg {
+  background: linear-gradient(135deg, #f8f7f4 0%, #f5f4f1 100%);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(220, 53, 69, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(33, 37, 41, 0.06) 0%, transparent 40%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23dc3545' fill-opacity='0.02' d='m0 0 4 4V0H0ZM0 4h4L0 0v4Z'/%3E%3C/svg%3E");
+}
+
+/* Japanese Color Palette */
+:root {
+  --crimson-red: #dc3545;
+  --deep-black: #212529;
+  --pearl-white: #f8f9fa;
+  --charcoal-gray: #495057;
+  --light-gray: #e9ecef;
+  --shadow-color: rgba(33, 37, 41, 0.15);
+}
+
+/* Traditional Button Styles */
+.btn-japanese {
+  background: linear-gradient(135deg, var(--crimson-red) 0%, #b02a37 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-japanese::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-japanese:hover::before {
+  left: 100%;
+}
+
+.btn-japanese:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+/* Card Styles with Japanese Aesthetics */
+.japanese-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 
+    0 2px 8px rgba(33, 37, 41, 0.1),
+    0 0 0 1px rgba(220, 53, 69, 0.1);
+  padding: 24px;
+  margin: 16px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.japanese-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--crimson-red), var(--deep-black));
+}
+
+/* Typography */
+.japanese-title {
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--deep-black);
+  text-align: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.japanese-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: var(--crimson-red);
+}
+
+/* Form Styles */
+.japanese-form {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.japanese-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--light-gray);
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.japanese-input:focus {
+  outline: none;
+  border-color: var(--crimson-red);
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
