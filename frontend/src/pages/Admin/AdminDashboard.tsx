@@ -40,10 +40,7 @@ import {
   Divider,
   Stack,
   Tooltip,
-  CircularProgress,
   CardActions,
-  Menu,
-  ListItemIcon,
 } from '@mui/material';
 import {
   CheckCircle,
@@ -71,6 +68,38 @@ import {
   Dashboard as DashboardIcon,
   Schedule,
   Analytics,
+  AdminPanelSettings,
+  PhotoCamera,
+  VideoLibrary,
+  InsertDriveFile,
+  Security,
+  Backup,
+  CloudUpload,
+  CalendarToday,
+  SupervisorAccount,
+  Business,
+  Map,
+  ImportExport,
+  NotificationsActive,
+  BarChart,
+  DonutLarge,
+  Timeline,
+  Psychology,
+  DeleteSweep,
+  SelectAll,
+  GetApp,
+  Publish,
+  Archive,
+  Restore,
+  SystemUpdate,
+  Build,
+  Storage,
+  NetworkCheck,
+  Speed,
+  Memory,
+  DeviceHub,
+  DataUsage,
+  MonitorHeart,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { 
@@ -165,6 +194,23 @@ const AdminDashboard: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
   const [showAnnouncementDialog, setShowAnnouncementDialog] = useState(false);
   const [showTournamentDialog, setShowTournamentDialog] = useState(false);
+  const [showUserDetailsDialog, setShowUserDetailsDialog] = useState(false);
+  const [showDojoDialog, setShowDojoDialog] = useState(false);
+  const [showMediaUploadDialog, setShowMediaUploadDialog] = useState(false);
+  const [showSystemSettingsDialog, setShowSystemSettingsDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedDojo, setSelectedDojo] = useState<any>(null);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [mediaFilter, setMediaFilter] = useState('all');
+  const [systemSettings, setSystemSettings] = useState({
+    maintenanceMode: false,
+    registrationEnabled: true,
+    emailNotifications: true,
+    smsNotifications: false,
+    backupFrequency: 'daily',
+    maxFileSize: 10,
+    allowedFileTypes: ['jpg', 'jpeg', 'png', 'pdf', 'mp4'],
+  });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
   const [announcementForm, setAnnouncementForm] = useState({
     title: '',
@@ -180,6 +226,17 @@ const AdminDashboard: React.FC = () => {
     state: '',
     registrationOpens: '',
     registrationCloses: ''
+  });
+  const [dojoForm, setDojoForm] = useState({
+    name: '',
+    address: '',
+    city: '',
+    state: '',
+    phoneNumber: '',
+    email: '',
+    instructorId: '',
+    capacity: 0,
+    facilities: [] as string[],
   });
 
   // Use the custom hooks
@@ -285,6 +342,115 @@ const AdminDashboard: React.FC = () => {
         severity: 'error' 
       });
     }
+  };
+
+  const handleViewUserDetails = (user: any) => {
+    setSelectedUser(user);
+    setShowUserDetailsDialog(true);
+  };
+
+  const handleCloseUserDetails = () => {
+    setShowUserDetailsDialog(false);
+    setSelectedUser(null);
+  };
+
+  const handleCreateDojo = async () => {
+    if (!dojoForm.name || !dojoForm.address || !dojoForm.city || !dojoForm.state) {
+      setSnackbar({ 
+        open: true, 
+        message: 'Please fill in all required fields', 
+        severity: 'error' 
+      });
+      return;
+    }
+
+    // Mock dojo creation - replace with actual API call
+    console.log('Creating dojo:', dojoForm);
+    
+    setShowDojoDialog(false);
+    setDojoForm({
+      name: '',
+      address: '',
+      city: '',
+      state: '',
+      phoneNumber: '',
+      email: '',
+      instructorId: '',
+      capacity: 0,
+      facilities: [],
+    });
+    setSnackbar({ 
+      open: true, 
+      message: 'Dojo created successfully!', 
+      severity: 'success' 
+    });
+  };
+
+  const handleMediaUpload = async (files: FileList) => {
+    // Mock media upload - replace with actual API call
+    console.log('Uploading media files:', files);
+    
+    setShowMediaUploadDialog(false);
+    setSnackbar({ 
+      open: true, 
+      message: `${files.length} file(s) uploaded successfully!`, 
+      severity: 'success' 
+    });
+  };
+
+  const handleBulkUserAction = async (action: 'approve' | 'reject') => {
+    if (selectedUsers.length === 0) {
+      setSnackbar({ 
+        open: true, 
+        message: 'Please select users first', 
+        severity: 'error' 
+      });
+      return;
+    }
+
+    // Mock bulk action - replace with actual API call
+    console.log(`Bulk ${action} for users:`, selectedUsers);
+    
+    setSelectedUsers([]);
+    setSnackbar({ 
+      open: true, 
+      message: `${selectedUsers.length} user(s) ${action}d successfully!`, 
+      severity: 'success' 
+    });
+  };
+
+  const handleSystemSettingsUpdate = async (settings: any) => {
+    // Mock settings update - replace with actual API call
+    console.log('Updating system settings:', settings);
+    
+    setSystemSettings(prev => ({ ...prev, ...settings }));
+    setSnackbar({ 
+      open: true, 
+      message: 'System settings updated successfully!', 
+      severity: 'success' 
+    });
+  };
+
+  const handleExportData = async (dataType: string) => {
+    // Mock data export - replace with actual API call
+    console.log('Exporting data:', dataType);
+    
+    setSnackbar({ 
+      open: true, 
+      message: `${dataType} data exported successfully!`, 
+      severity: 'success' 
+    });
+  };
+
+  const handleSystemBackup = async () => {
+    // Mock system backup - replace with actual API call
+    console.log('Creating system backup...');
+    
+    setSnackbar({ 
+      open: true, 
+      message: 'System backup created successfully!', 
+      severity: 'success' 
+    });
   };
 
 // Enhanced TabPanel component with professional styling
@@ -655,6 +821,54 @@ const MetricBox = styled(Box)(({ theme }) => ({
                 } 
               }}
             />
+            <Tab 
+              icon={<Business />} 
+              label="Dojo Management" 
+              iconPosition="start"
+              sx={{ 
+                '& .MuiTab-iconWrapper': { 
+                  mb: 0, 
+                  mr: 1,
+                  '& svg': { fontSize: '1.2rem' }
+                } 
+              }}
+            />
+            <Tab 
+              icon={<PhotoLibrary />} 
+              label="Media Gallery" 
+              iconPosition="start"
+              sx={{ 
+                '& .MuiTab-iconWrapper': { 
+                  mb: 0, 
+                  mr: 1,
+                  '& svg': { fontSize: '1.2rem' }
+                } 
+              }}
+            />
+            <Tab 
+              icon={<CalendarToday />} 
+              label="Event Calendar" 
+              iconPosition="start"
+              sx={{ 
+                '& .MuiTab-iconWrapper': { 
+                  mb: 0, 
+                  mr: 1,
+                  '& svg': { fontSize: '1.2rem' }
+                } 
+              }}
+            />
+            <Tab 
+              icon={<Settings />} 
+              label="System Settings" 
+              iconPosition="start"
+              sx={{ 
+                '& .MuiTab-iconWrapper': { 
+                  mb: 0, 
+                  mr: 1,
+                  '& svg': { fontSize: '1.2rem' }
+                } 
+              }}
+            />
           </Tabs>
 
           {/* Enhanced User Management Tab */}
@@ -681,6 +895,14 @@ const MetricBox = styled(Box)(({ theme }) => ({
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1 }}>
+                  <TextField
+                    size="small"
+                    placeholder="Search users..."
+                    InputProps={{
+                      startAdornment: <Search sx={{ color: '#6c757d', mr: 1 }} />
+                    }}
+                    sx={{ minWidth: 200 }}
+                  />
                   <Tooltip title="Filter Users">
                     <IconButton 
                       sx={{ 
@@ -694,6 +916,7 @@ const MetricBox = styled(Box)(({ theme }) => ({
                   </Tooltip>
                   <Tooltip title="Export User List">
                     <IconButton 
+                      onClick={() => handleExportData('users')}
                       sx={{ 
                         bgcolor: 'rgba(220, 53, 69, 0.1)',
                         color: '#dc3545',
@@ -701,6 +924,17 @@ const MetricBox = styled(Box)(({ theme }) => ({
                       }}
                     >
                       <Download />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Refresh Data">
+                    <IconButton 
+                      sx={{ 
+                        bgcolor: 'rgba(220, 53, 69, 0.1)',
+                        color: '#dc3545',
+                        '&:hover': { bgcolor: 'rgba(220, 53, 69, 0.2)' }
+                      }}
+                    >
+                      <Refresh />
                     </IconButton>
                   </Tooltip>
                 </Box>
@@ -773,11 +1007,71 @@ const MetricBox = styled(Box)(({ theme }) => ({
                       />
                     </Box>
                   }
+                  action={
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Tooltip title="Select All">
+                        <IconButton 
+                          onClick={() => {
+                            if (selectedUsers.length === pendingUsers.length) {
+                              setSelectedUsers([]);
+                            } else {
+                              setSelectedUsers(pendingUsers.map((user: any) => user._id));
+                            }
+                          }}
+                        >
+                          <SelectAll />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Export Users">
+                        <IconButton onClick={() => handleExportData('users')}>
+                          <GetApp />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  }
                   sx={{ 
                     bgcolor: 'rgba(255, 193, 7, 0.05)',
                     borderBottom: '1px solid rgba(255, 193, 7, 0.1)'
                   }}
                 />
+
+                {/* Bulk Actions Bar */}
+                {selectedUsers.length > 0 && (
+                  <Box sx={{ p: 2, bgcolor: 'rgba(220, 53, 69, 0.05)', borderBottom: '1px solid rgba(220, 53, 69, 0.1)' }}>
+                    <Alert 
+                      severity="info" 
+                      sx={{ mb: 0 }}
+                      action={
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Button 
+                            size="small" 
+                            color="success"
+                            variant="contained"
+                            onClick={() => handleBulkUserAction('approve')}
+                          >
+                            Approve Selected ({selectedUsers.length})
+                          </Button>
+                          <Button 
+                            size="small" 
+                            color="error"
+                            variant="contained"
+                            onClick={() => handleBulkUserAction('reject')}
+                          >
+                            Reject Selected ({selectedUsers.length})
+                          </Button>
+                          <Button 
+                            size="small" 
+                            onClick={() => setSelectedUsers([])}
+                          >
+                            Clear
+                          </Button>
+                        </Box>
+                      }
+                    >
+                      {selectedUsers.length} user(s) selected for bulk actions
+                    </Alert>
+                  </Box>
+                )}
                 <CardContent sx={{ p: 0 }}>
                   {pendingUsers && pendingUsers.length > 0 ? (
                     <List sx={{ p: 0 }}>
@@ -792,6 +1086,25 @@ const MetricBox = styled(Box)(({ theme }) => ({
                               }
                             }}
                           >
+                            <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                              <input
+                                type="checkbox"
+                                checked={selectedUsers.includes(user._id)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedUsers(prev => [...prev, user._id]);
+                                  } else {
+                                    setSelectedUsers(prev => prev.filter(id => id !== user._id));
+                                  }
+                                }}
+                                style={{ 
+                                  width: '18px', 
+                                  height: '18px',
+                                  accentColor: '#dc3545',
+                                  cursor: 'pointer'
+                                }}
+                              />
+                            </Box>
                             <ListItemAvatar>
                               <Avatar 
                                 sx={{ 
@@ -868,6 +1181,7 @@ const MetricBox = styled(Box)(({ theme }) => ({
                                 <Tooltip title="View Details">
                                   <IconButton
                                     color="info"
+                                    onClick={() => handleViewUserDetails(user)}
                                     sx={{
                                       bgcolor: 'rgba(23, 162, 184, 0.1)',
                                       '&:hover': { bgcolor: 'rgba(23, 162, 184, 0.2)' }
@@ -897,6 +1211,165 @@ const MetricBox = styled(Box)(({ theme }) => ({
                     </Box>
                   )}
                 </CardContent>
+              </Card>
+
+              {/* User Roles & Permissions Section */}
+              <Card elevation={2} sx={{ borderRadius: '16px', overflow: 'hidden', mt: 4 }}>
+                <CardHeader
+                  title={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <SupervisorAccount sx={{ color: '#dc3545' }} />
+                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        User Roles & Permissions
+                      </Typography>
+                    </Box>
+                  }
+                  action={
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button
+                        variant="outlined"
+                        startIcon={<Add />}
+                        size="small"
+                      >
+                        Add User
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        startIcon={<ImportExport />}
+                        size="small"
+                        onClick={() => handleExportData('roles')}
+                      >
+                        Export Roles
+                      </Button>
+                    </Box>
+                  }
+                  sx={{ 
+                    bgcolor: 'rgba(220, 53, 69, 0.05)',
+                    borderBottom: '1px solid rgba(220, 53, 69, 0.1)'
+                  }}
+                />
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>User</TableCell>
+                        <TableCell>Role</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell>Last Active</TableCell>
+                        <TableCell>Permissions</TableCell>
+                        <TableCell align="right">Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {/* Sample user data with roles */}
+                      {[
+                        { 
+                          name: 'Anshuman Singh', 
+                          email: 'anshuman@kyokushin.com', 
+                          role: 'Super Admin', 
+                          status: 'Active', 
+                          lastActive: '5 mins ago',
+                          permissions: ['All Access']
+                        },
+                        { 
+                          name: 'Sensei Tanaka', 
+                          email: 'tanaka@kyokushin.com', 
+                          role: 'Instructor', 
+                          status: 'Active', 
+                          lastActive: '2 hours ago',
+                          permissions: ['Manage Students', 'Create Events', 'View Reports']
+                        },
+                        { 
+                          name: 'John Smith', 
+                          email: 'john@kyokushin.com', 
+                          role: 'Student', 
+                          status: 'Active', 
+                          lastActive: '1 day ago',
+                          permissions: ['View Profile', 'Register Events']
+                        },
+                        { 
+                          name: 'Admin User', 
+                          email: 'admin@kyokushin.com', 
+                          role: 'Admin', 
+                          status: 'Inactive', 
+                          lastActive: '5 days ago',
+                          permissions: ['User Management', 'System Settings']
+                        },
+                      ].map((user, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                              <Avatar sx={{ bgcolor: '#dc3545' }}>
+                                {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                              </Avatar>
+                              <Box>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                                  {user.name}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                  {user.email}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Chip 
+                              label={user.role} 
+                              size="small" 
+                              color={
+                                user.role === 'Super Admin' ? 'error' :
+                                user.role === 'Admin' ? 'warning' :
+                                user.role === 'Instructor' ? 'primary' : 'success'
+                              }
+                              variant="outlined"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Chip 
+                              label={user.status} 
+                              size="small" 
+                              color={user.status === 'Active' ? 'success' : 'default'}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" color="text.secondary">
+                              {user.lastActive}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {user.permissions.slice(0, 2).map((permission, idx) => (
+                                <Chip key={idx} label={permission} size="small" variant="outlined" />
+                              ))}
+                              {user.permissions.length > 2 && (
+                                <Chip 
+                                  label={`+${user.permissions.length - 2} more`} 
+                                  size="small" 
+                                  variant="outlined" 
+                                  color="primary"
+                                />
+                              )}
+                            </Box>
+                          </TableCell>
+                          <TableCell align="right">
+                            <IconButton size="small" sx={{ color: '#dc3545' }}>
+                              <Visibility />
+                            </IconButton>
+                            <IconButton size="small" sx={{ color: '#6c757d' }}>
+                              <Edit />
+                            </IconButton>
+                            <IconButton 
+                              size="small" 
+                              sx={{ color: user.status === 'Active' ? '#ffc107' : '#28a745' }}
+                            >
+                              {user.status === 'Active' ? <Cancel /> : <CheckCircle />}
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Card>
             </Box>
           </TabPanel>
@@ -1143,6 +1616,777 @@ const MetricBox = styled(Box)(({ theme }) => ({
               </TableContainer>
             </Box>
           </TabPanel>
+
+          {/* Dojo Management Tab */}
+          <TabPanel value={currentTab} index={4}>
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box>
+                  <Typography 
+                    variant="h4" 
+                    sx={{ 
+                      fontWeight: 600, 
+                      color: '#212529',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
+                      mb: 1
+                    }}
+                  >
+                    <Business sx={{ color: '#dc3545' }} />
+                    Dojo Management Hub
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Manage dojos, locations, and instructor assignments across the organization
+                  </Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  startIcon={<Add />}
+                  onClick={() => setShowDojoDialog(true)}
+                  sx={{
+                    background: 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #b02a37 0%, #8b1e2b 100%)',
+                    },
+                  }}
+                >
+                  Add New Dojo
+                </Button>
+              </Box>
+
+              {/* Dojo Statistics Cards */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Business sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      24
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Active Dojos
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <SupervisorAccount sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      18
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Certified Instructors
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Map sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      12
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      States Covered
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Group sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      1,247
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Total Students
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+              </Box>
+
+              {/* Dojo List */}
+              <ProfessionalCard>
+                <CardHeader 
+                  title="Dojo Directory"
+                  subheader="Manage dojo locations and instructor assignments"
+                  action={
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Tooltip title="Export Data">
+                        <IconButton>
+                          <GetApp />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Import Data">
+                        <IconButton>
+                          <Publish />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  }
+                />
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Dojo Name</TableCell>
+                        <TableCell>Location</TableCell>
+                        <TableCell>Instructor</TableCell>
+                        <TableCell>Students</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell align="right">Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {/* Sample dojo data */}
+                      {[
+                        { name: 'Tokyo Central Dojo', location: 'Mumbai, Maharashtra', instructor: 'Sensei Tanaka', students: 85, status: 'Active' },
+                        { name: 'Kyokushin Delhi', location: 'Delhi, Delhi', instructor: 'Sensei Kumar', students: 62, status: 'Active' },
+                        { name: 'Bangalore Fighting Spirit', location: 'Bangalore, Karnataka', instructor: 'Sensei Raj', students: 47, status: 'Active' },
+                      ].map((dojo, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                              <Avatar sx={{ bgcolor: '#dc3545' }}>
+                                <Business />
+                              </Avatar>
+                              <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                                {dojo.name}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>{dojo.location}</TableCell>
+                          <TableCell>{dojo.instructor}</TableCell>
+                          <TableCell>
+                            <Chip label={dojo.students} size="small" color="primary" />
+                          </TableCell>
+                          <TableCell>
+                            <Chip 
+                              label={dojo.status} 
+                              size="small" 
+                              color="success"
+                            />
+                          </TableCell>
+                          <TableCell align="right">
+                            <IconButton size="small" sx={{ color: '#dc3545' }}>
+                              <Visibility />
+                            </IconButton>
+                            <IconButton size="small" sx={{ color: '#6c757d' }}>
+                              <Edit />
+                            </IconButton>
+                            <IconButton size="small" sx={{ color: '#dc3545' }}>
+                              <Map />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </ProfessionalCard>
+            </Box>
+          </TabPanel>
+
+          {/* Media Gallery Tab */}
+          <TabPanel value={currentTab} index={5}>
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box>
+                  <Typography 
+                    variant="h4" 
+                    sx={{ 
+                      fontWeight: 600, 
+                      color: '#212529',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
+                      mb: 1
+                    }}
+                  >
+                    <PhotoLibrary sx={{ color: '#dc3545' }} />
+                    Media Gallery Hub
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Manage photos, videos, and documents for tournaments, events, and training
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<PhotoCamera />}
+                    onClick={() => setShowMediaUploadDialog(true)}
+                  >
+                    Upload Photos
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<VideoLibrary />}
+                    onClick={() => setShowMediaUploadDialog(true)}
+                  >
+                    Upload Videos
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<CloudUpload />}
+                    onClick={() => setShowMediaUploadDialog(true)}
+                    sx={{
+                      background: 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #b02a37 0%, #8b1e2b 100%)',
+                      },
+                    }}
+                  >
+                    Upload Media
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* Media Statistics */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <PhotoCamera sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      2,847
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Photos
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <VideoLibrary sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      156
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Videos
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <InsertDriveFile sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      89
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Documents
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Storage sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      45.2 GB
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Storage Used
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+              </Box>
+
+              {/* Media Filter and Actions */}
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <FormControl size="small" sx={{ minWidth: 120 }}>
+                    <InputLabel>Filter Media</InputLabel>
+                    <Select
+                      value={mediaFilter}
+                      onChange={(e) => setMediaFilter(e.target.value)}
+                      label="Filter Media"
+                    >
+                      <MenuItem value="all">All Media</MenuItem>
+                      <MenuItem value="photos">Photos</MenuItem>
+                      <MenuItem value="videos">Videos</MenuItem>
+                      <MenuItem value="documents">Documents</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <TextField
+                    size="small"
+                    placeholder="Search media..."
+                    InputProps={{
+                      startAdornment: <Search sx={{ color: '#6c757d', mr: 1 }} />
+                    }}
+                  />
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Tooltip title="Bulk Actions">
+                    <IconButton>
+                      <SelectAll />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Archive Selected">
+                    <IconButton>
+                      <Archive />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete Selected">
+                    <IconButton sx={{ color: '#dc3545' }}>
+                      <DeleteSweep />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+
+              {/* Media Gallery Grid */}
+              <ProfessionalCard>
+                <CardContent>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 2 }}>
+                    {/* Sample media items */}
+                    {Array.from({ length: 12 }).map((_, index) => (
+                      <Card key={index} sx={{ position: 'relative', '&:hover': { transform: 'scale(1.02)' } }}>
+                        <Box
+                          sx={{
+                            height: 150,
+                            background: 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white'
+                          }}
+                        >
+                          {index % 3 === 0 ? <PhotoCamera sx={{ fontSize: '3rem' }} /> : 
+                           index % 3 === 1 ? <VideoLibrary sx={{ fontSize: '3rem' }} /> : 
+                           <InsertDriveFile sx={{ fontSize: '3rem' }} />}
+                        </Box>
+                        <CardContent sx={{ p: 1 }}>
+                          <Typography variant="caption" noWrap>
+                            {index % 3 === 0 ? 'Tournament_2024_' : 
+                             index % 3 === 1 ? 'Training_Video_' : 
+                             'Certificate_'}
+                            {index + 1}
+                          </Typography>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                            <Typography variant="caption" color="text.secondary">
+                              {index % 3 === 0 ? '2.4 MB' : 
+                               index % 3 === 1 ? '45.2 MB' : 
+                               '156 KB'}
+                            </Typography>
+                            <IconButton size="small">
+                              <MoreVert fontSize="small" />
+                            </IconButton>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </Box>
+                </CardContent>
+              </ProfessionalCard>
+            </Box>
+          </TabPanel>
+
+          {/* Event Calendar Tab */}
+          <TabPanel value={currentTab} index={6}>
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box>
+                  <Typography 
+                    variant="h4" 
+                    sx={{ 
+                      fontWeight: 600, 
+                      color: '#212529',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
+                      mb: 1
+                    }}
+                  >
+                    <CalendarToday sx={{ color: '#dc3545' }} />
+                    Event Calendar Hub
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Manage and schedule tournaments, seminars, gradings, and training events
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Schedule />}
+                  >
+                    Schedule Event
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<Add />}
+                    sx={{
+                      background: 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #b02a37 0%, #8b1e2b 100%)',
+                      },
+                    }}
+                  >
+                    Create Event
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* Calendar Overview */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <EmojiEvents sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      12
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Upcoming Events
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Schedule sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      3
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      This Week
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Group sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      847
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Total Registrations
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Analytics sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      94%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Attendance Rate
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+              </Box>
+
+              {/* Event List */}
+              <ProfessionalCard>
+                <CardHeader 
+                  title="Upcoming Events"
+                  subheader="Manage and monitor scheduled events"
+                />
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Event</TableCell>
+                        <TableCell>Type</TableCell>
+                        <TableCell>Date</TableCell>
+                        <TableCell>Location</TableCell>
+                        <TableCell>Registrations</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell align="right">Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {/* Sample event data */}
+                      {[
+                        { name: 'National Championship 2024', type: 'Tournament', date: '2024-08-15', location: 'Mumbai, Maharashtra', registrations: 245, status: 'Open' },
+                        { name: 'Black Belt Grading', type: 'Grading', date: '2024-07-20', location: 'Delhi, Delhi', registrations: 18, status: 'Closed' },
+                        { name: 'Summer Training Camp', type: 'Camp', date: '2024-09-01', location: 'Bangalore, Karnataka', registrations: 67, status: 'Open' },
+                      ].map((event, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                              {event.name}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip 
+                              label={event.type} 
+                              size="small" 
+                              color={event.type === 'Tournament' ? 'primary' : event.type === 'Grading' ? 'secondary' : 'info'}
+                            />
+                          </TableCell>
+                          <TableCell>{new Date(event.date).toLocaleDateString()}</TableCell>
+                          <TableCell>{event.location}</TableCell>
+                          <TableCell>
+                            <Badge badgeContent={event.registrations} color="primary" max={999}>
+                              <Group />
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Chip 
+                              label={event.status} 
+                              size="small" 
+                              color={event.status === 'Open' ? 'success' : 'default'}
+                            />
+                          </TableCell>
+                          <TableCell align="right">
+                            <IconButton size="small" sx={{ color: '#dc3545' }}>
+                              <Visibility />
+                            </IconButton>
+                            <IconButton size="small" sx={{ color: '#6c757d' }}>
+                              <Edit />
+                            </IconButton>
+                            <IconButton size="small" sx={{ color: '#dc3545' }}>
+                              <CalendarToday />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </ProfessionalCard>
+            </Box>
+          </TabPanel>
+
+          {/* System Settings Tab */}
+          <TabPanel value={currentTab} index={7}>
+            <Box sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                <Box>
+                  <Typography 
+                    variant="h4" 
+                    sx={{ 
+                      fontWeight: 600, 
+                      color: '#212529',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1.5,
+                      mb: 1
+                    }}
+                  >
+                    <Settings sx={{ color: '#dc3545' }} />
+                    System Settings Hub
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Configure platform settings, security, and system preferences
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Backup />}
+                  >
+                    Backup Data
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<SystemUpdate />}
+                    sx={{
+                      background: 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #b02a37 0%, #8b1e2b 100%)',
+                      },
+                    }}
+                  >
+                    Save Settings
+                  </Button>
+                </Box>
+              </Box>
+
+              {/* System Health Metrics */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 4 }}>
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <MonitorHeart sx={{ fontSize: '3rem', color: '#28a745', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      99.8%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      System Uptime
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Speed sx={{ fontSize: '3rem', color: '#dc3545', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      245ms
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Avg Response Time
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <Memory sx={{ fontSize: '3rem', color: '#ffc107', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      67%
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Memory Usage
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+
+                <StatsCard sx={{ flex: '1 1 200px' }}>
+                  <CardContent sx={{ textAlign: 'center' }}>
+                    <NetworkCheck sx={{ fontSize: '3rem', color: '#28a745', mb: 1 }} />
+                    <Typography variant="h4" sx={{ fontWeight: 600, color: '#212529' }}>
+                      Online
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Network Status
+                    </Typography>
+                  </CardContent>
+                </StatsCard>
+              </Box>
+
+              {/* Settings Categories */}
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                {/* General Settings */}
+                <ProfessionalCard sx={{ flex: '1 1 400px' }}>
+                  <CardHeader 
+                    title="General Settings"
+                    avatar={<Settings sx={{ color: '#dc3545' }} />}
+                  />
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography>Maintenance Mode</Typography>
+                        <Chip 
+                          label={systemSettings.maintenanceMode ? 'ON' : 'OFF'} 
+                          color={systemSettings.maintenanceMode ? 'error' : 'success'}
+                          size="small"
+                        />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography>User Registration</Typography>
+                        <Chip 
+                          label={systemSettings.registrationEnabled ? 'ENABLED' : 'DISABLED'} 
+                          color={systemSettings.registrationEnabled ? 'success' : 'error'}
+                          size="small"
+                        />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography>Email Notifications</Typography>
+                        <Chip 
+                          label={systemSettings.emailNotifications ? 'ON' : 'OFF'} 
+                          color={systemSettings.emailNotifications ? 'success' : 'default'}
+                          size="small"
+                        />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography>SMS Notifications</Typography>
+                        <Chip 
+                          label={systemSettings.smsNotifications ? 'ON' : 'OFF'} 
+                          color={systemSettings.smsNotifications ? 'success' : 'default'}
+                          size="small"
+                        />
+                      </Box>
+                    </Stack>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" startIcon={<Edit />}>
+                      Configure
+                    </Button>
+                  </CardActions>
+                </ProfessionalCard>
+
+                {/* Security Settings */}
+                <ProfessionalCard sx={{ flex: '1 1 400px' }}>
+                  <CardHeader 
+                    title="Security & Backup"
+                    avatar={<Security sx={{ color: '#dc3545' }} />}
+                  />
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography>Backup Frequency</Typography>
+                        <Chip 
+                          label={systemSettings.backupFrequency.toUpperCase()} 
+                          color="primary"
+                          size="small"
+                        />
+                      </Box>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography>Max File Size</Typography>
+                        <Chip 
+                          label={`${systemSettings.maxFileSize} MB`} 
+                          color="info"
+                          size="small"
+                        />
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Allowed File Types:
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          {systemSettings.allowedFileTypes.map((type, index) => (
+                            <Chip key={index} label={type.toUpperCase()} size="small" variant="outlined" />
+                          ))}
+                        </Box>
+                      </Box>
+                    </Stack>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" startIcon={<Security />}>
+                      Security Settings
+                    </Button>
+                    <Button size="small" startIcon={<Backup />}>
+                      Backup Now
+                    </Button>
+                  </CardActions>
+                </ProfessionalCard>
+
+                {/* System Tools */}
+                <ProfessionalCard sx={{ flex: '1 1 400px' }}>
+                  <CardHeader 
+                    title="System Tools"
+                    avatar={<Build sx={{ color: '#dc3545' }} />}
+                  />
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<DataUsage />}
+                        fullWidth
+                      >
+                        Database Cleanup
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<ImportExport />}
+                        fullWidth
+                      >
+                        Export/Import Data
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<DeviceHub />}
+                        fullWidth
+                      >
+                        API Management
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        startIcon={<Analytics />}
+                        fullWidth
+                      >
+                        System Logs
+                      </Button>
+                    </Stack>
+                  </CardContent>
+                </ProfessionalCard>
+              </Box>
+            </Box>
+          </TabPanel>
         </Paper>
       </Container>
 
@@ -1330,6 +2574,445 @@ const MetricBox = styled(Box)(({ theme }) => ({
             }}
           >
             Create Tournament
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* User Details Dialog */}
+      <Dialog 
+        open={showUserDetailsDialog} 
+        onClose={handleCloseUserDetails}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: { borderRadius: '16px' }
+        }}
+      >
+        <DialogTitle sx={{ borderBottom: '1px solid #e9ecef', textAlign: 'center' }}>
+          <Person sx={{ fontSize: 40, color: '#dc3545', mb: 1 }} />
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            User Details
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 3 }}>
+          {selectedUser && (
+            <Box>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mb: 3 }}>
+                <Box sx={{ flex: '1 1 250px' }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#212529' }}>
+                    Personal Information
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">Name:</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {selectedUser.profile?.firstName} {selectedUser.profile?.lastName}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">Email:</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {selectedUser.email}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">Phone:</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {selectedUser.profile?.phoneNumber || 'Not provided'}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">Role:</Typography>
+                      <Chip 
+                        label={selectedUser.role?.toUpperCase()} 
+                        color={selectedUser.role === 'instructor' ? 'primary' : 'secondary'}
+                        size="small"
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+                
+                <Box sx={{ flex: '1 1 250px' }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#212529' }}>
+                    Status & Registration
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">Status:</Typography>
+                      <Chip 
+                        label={selectedUser.status?.toUpperCase()} 
+                        color={selectedUser.status === 'approved' ? 'success' : 'warning'}
+                        size="small"
+                      />
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" color="text.secondary">Registered:</Typography>
+                      <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                        {new Date(selectedUser.createdAt).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                    {selectedUser.profile?.state && (
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">Location:</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {selectedUser.profile.city}, {selectedUser.profile.state}
+                        </Typography>
+                      </Box>
+                    )}
+                    {selectedUser.profile?.assignedInstructor && (
+                      <Box>
+                        <Typography variant="body2" color="text.secondary">Assigned Instructor:</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {selectedUser.profile.assignedInstructor}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              </Box>
+              
+              {selectedUser.role === 'instructor' && (
+                <Box sx={{ mt: 3, p: 2, bgcolor: 'rgba(220, 53, 69, 0.05)', borderRadius: 2 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, color: '#212529' }}>
+                    Instructor Information
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    This user has registered as an instructor and requires approval to access instructor features.
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 3 }}>
+          <Button onClick={handleCloseUserDetails}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dojo Creation Dialog */}
+      <Dialog 
+        open={showDojoDialog} 
+        onClose={() => setShowDojoDialog(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ borderBottom: '1px solid #e9ecef' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Business />
+            Create New Dojo
+          </Box>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 3 }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+            <TextField
+              fullWidth
+              label="Dojo Name"
+              variant="outlined"
+              value={dojoForm.name}
+              onChange={(e) => setDojoForm(prev => ({ ...prev, name: e.target.value }))}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Address"
+              variant="outlined"
+              multiline
+              rows={2}
+              value={dojoForm.address}
+              onChange={(e) => setDojoForm(prev => ({ ...prev, address: e.target.value }))}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              sx={{ flex: '1 1 200px', mb: 2 }}
+              label="City"
+              variant="outlined"
+              value={dojoForm.city}
+              onChange={(e) => setDojoForm(prev => ({ ...prev, city: e.target.value }))}
+            />
+            <TextField
+              sx={{ flex: '1 1 200px', mb: 2 }}
+              label="State"
+              variant="outlined"
+              value={dojoForm.state}
+              onChange={(e) => setDojoForm(prev => ({ ...prev, state: e.target.value }))}
+            />
+            <TextField
+              sx={{ flex: '1 1 200px', mb: 2 }}
+              label="Phone Number"
+              variant="outlined"
+              value={dojoForm.phoneNumber}
+              onChange={(e) => setDojoForm(prev => ({ ...prev, phoneNumber: e.target.value }))}
+            />
+            <TextField
+              sx={{ flex: '1 1 200px', mb: 2 }}
+              label="Email"
+              variant="outlined"
+              type="email"
+              value={dojoForm.email}
+              onChange={(e) => setDojoForm(prev => ({ ...prev, email: e.target.value }))}
+            />
+            <TextField
+              sx={{ flex: '1 1 200px', mb: 2 }}
+              label="Capacity"
+              variant="outlined"
+              type="number"
+              value={dojoForm.capacity}
+              onChange={(e) => setDojoForm(prev => ({ ...prev, capacity: parseInt(e.target.value) || 0 }))}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 3 }}>
+          <Button onClick={() => setShowDojoDialog(false)}>
+            Cancel
+          </Button>
+          <Button 
+            variant="contained" 
+            onClick={handleCreateDojo}
+            sx={{
+              background: 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #b02a37 0%, #8b1e2b 100%)',
+              },
+            }}
+          >
+            Create Dojo
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Media Upload Dialog */}
+      <Dialog 
+        open={showMediaUploadDialog} 
+        onClose={() => setShowMediaUploadDialog(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ borderBottom: '1px solid #e9ecef' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CloudUpload />
+            Upload Media Files
+          </Box>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 3 }}>
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <CloudUpload sx={{ fontSize: '4rem', color: '#dc3545', mb: 2 }} />
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Drop files here or click to browse
+            </Typography>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<PhotoCamera />}
+              sx={{ mr: 1, mb: 1 }}
+            >
+              Upload Photos
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                hidden
+                onChange={(e) => {
+                  if (e.target.files) {
+                    handleMediaUpload(e.target.files);
+                  }
+                }}
+              />
+            </Button>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<VideoLibrary />}
+              sx={{ mr: 1, mb: 1 }}
+            >
+              Upload Videos
+              <input
+                type="file"
+                multiple
+                accept="video/*"
+                hidden
+                onChange={(e) => {
+                  if (e.target.files) {
+                    handleMediaUpload(e.target.files);
+                  }
+                }}
+              />
+            </Button>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<InsertDriveFile />}
+              sx={{ mb: 1 }}
+            >
+              Upload Documents
+              <input
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx"
+                hidden
+                onChange={(e) => {
+                  if (e.target.files) {
+                    handleMediaUpload(e.target.files);
+                  }
+                }}
+              />
+            </Button>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+              Maximum file size: {systemSettings.maxFileSize} MB
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Allowed types: {systemSettings.allowedFileTypes.join(', ')}
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 3 }}>
+          <Button onClick={() => setShowMediaUploadDialog(false)}>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* System Settings Dialog */}
+      <Dialog 
+        open={showSystemSettingsDialog} 
+        onClose={() => setShowSystemSettingsDialog(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ borderBottom: '1px solid #e9ecef' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Settings />
+            System Configuration
+          </Box>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <AdminPanelSettings />
+                General Settings
+              </Typography>
+              <Stack spacing={2}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography>Maintenance Mode</Typography>
+                  <Button
+                    size="small"
+                    variant={systemSettings.maintenanceMode ? 'contained' : 'outlined'}
+                    color={systemSettings.maintenanceMode ? 'error' : 'success'}
+                    onClick={() => handleSystemSettingsUpdate({ maintenanceMode: !systemSettings.maintenanceMode })}
+                  >
+                    {systemSettings.maintenanceMode ? 'ON' : 'OFF'}
+                  </Button>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography>User Registration</Typography>
+                  <Button
+                    size="small"
+                    variant={systemSettings.registrationEnabled ? 'contained' : 'outlined'}
+                    color={systemSettings.registrationEnabled ? 'success' : 'error'}
+                    onClick={() => handleSystemSettingsUpdate({ registrationEnabled: !systemSettings.registrationEnabled })}
+                  >
+                    {systemSettings.registrationEnabled ? 'ENABLED' : 'DISABLED'}
+                  </Button>
+                </Box>
+              </Stack>
+            </Paper>
+
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <NotificationsActive />
+                Notification Settings
+              </Typography>
+              <Stack spacing={2}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography>Email Notifications</Typography>
+                  <Button
+                    size="small"
+                    variant={systemSettings.emailNotifications ? 'contained' : 'outlined'}
+                    color={systemSettings.emailNotifications ? 'success' : 'inherit'}
+                    onClick={() => handleSystemSettingsUpdate({ emailNotifications: !systemSettings.emailNotifications })}
+                  >
+                    {systemSettings.emailNotifications ? 'ON' : 'OFF'}
+                  </Button>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography>SMS Notifications</Typography>
+                  <Button
+                    size="small"
+                    variant={systemSettings.smsNotifications ? 'contained' : 'outlined'}
+                    color={systemSettings.smsNotifications ? 'success' : 'inherit'}
+                    onClick={() => handleSystemSettingsUpdate({ smsNotifications: !systemSettings.smsNotifications })}
+                  >
+                    {systemSettings.smsNotifications ? 'ON' : 'OFF'}
+                  </Button>
+                </Box>
+              </Stack>
+            </Paper>
+
+            <Paper sx={{ p: 2 }}>
+              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Security />
+                Security & Backup
+              </Typography>
+              <Stack spacing={2}>
+                <FormControl size="small" fullWidth>
+                  <InputLabel>Backup Frequency</InputLabel>
+                  <Select
+                    value={systemSettings.backupFrequency}
+                    onChange={(e) => handleSystemSettingsUpdate({ backupFrequency: e.target.value })}
+                    label="Backup Frequency"
+                  >
+                    <MenuItem value="hourly">Hourly</MenuItem>
+                    <MenuItem value="daily">Daily</MenuItem>
+                    <MenuItem value="weekly">Weekly</MenuItem>
+                    <MenuItem value="monthly">Monthly</MenuItem>
+                  </Select>
+                </FormControl>
+                <TextField
+                  size="small"
+                  label="Max File Size (MB)"
+                  type="number"
+                  value={systemSettings.maxFileSize}
+                  onChange={(e) => handleSystemSettingsUpdate({ maxFileSize: parseInt(e.target.value) || 10 })}
+                />
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Backup />}
+                    onClick={handleSystemBackup}
+                    size="small"
+                  >
+                    Backup Now
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<ImportExport />}
+                    onClick={() => handleExportData('system')}
+                    size="small"
+                  >
+                    Export Data
+                  </Button>
+                </Box>
+              </Stack>
+            </Paper>
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 3 }}>
+          <Button onClick={() => setShowSystemSettingsDialog(false)}>
+            Close
+          </Button>
+          <Button 
+            variant="contained" 
+            onClick={() => setShowSystemSettingsDialog(false)}
+            sx={{
+              background: 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #b02a37 0%, #8b1e2b 100%)',
+              },
+            }}
+          >
+            Save Changes
           </Button>
         </DialogActions>
       </Dialog>
