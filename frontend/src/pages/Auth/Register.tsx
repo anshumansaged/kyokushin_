@@ -144,7 +144,7 @@ const Register: React.FC = () => {
   }, [selectedCity]);
 
   const onSubmit = async (data: RegisterFormData) => {
-    console.log('🚀 Form submitted with data:', data);
+    console.log('🚀 Form submitted');
     try {
       setError('');
       
@@ -260,7 +260,7 @@ const Register: React.FC = () => {
             {/* Debug info */}
             {Object.keys(errors).length > 0 && (
               <Alert severity="warning" sx={{ mb: 2 }}>
-                Form validation errors: {JSON.stringify(errors)}
+                Form validation errors: {Object.keys(errors).join(', ')}
               </Alert>
             )}
             
@@ -453,8 +453,8 @@ const Register: React.FC = () => {
             {/* Debug button - Remove in production */}
             <Button
               onClick={() => {
-                console.log('🔍 Debug - Form data:', watch());
-                console.log('🔍 Debug - Form errors:', errors);
+                console.log('🔍 Debug - Form state available');
+                console.log('🔍 Debug - Form errors:', Object.keys(errors));
                 console.log('🔍 Debug - isSubmitting:', isSubmitting);
                 console.log('🔍 Debug - selectedState:', selectedState);
                 console.log('🔍 Debug - selectedCity:', selectedCity);

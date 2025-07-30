@@ -1,7 +1,9 @@
 import React from 'react';
-import { Container, Typography, Box, Card, CardContent, Alert } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Alert, Button } from '@mui/material';
 // Removed Grid import - using Box with flexbox instead
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import { AdminPanelSettings, Dashboard as DashboardIcon } from '@mui/icons-material';
 
 const DashboardContainer = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, #f8f7f4 0%, #f5f4f1 100%)',
@@ -32,6 +34,8 @@ const WelcomeCard = styled(Card)(({ theme }) => ({
 }));
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+  
   // Get user data from localStorage
   const userData = localStorage.getItem('user');
   const welcomeMessage = localStorage.getItem('welcomeMessage');
@@ -163,6 +167,64 @@ const Dashboard: React.FC = () => {
               '& > *': { flex: { xs: '1 1 100%', md: '1 1 calc(50% - 12px)' } }
             }}
           >
+            {/* Admin Panel Button - Only for admin users */}
+            {user.role === 'admin' && (
+              <Box sx={{ flex: '1 1 100%', mb: 2 }}>
+                <WelcomeCard>
+                  <CardContent sx={{ p: 3, textAlign: 'center' }}>
+                    <AdminPanelSettings 
+                      sx={{ 
+                        fontSize: '3rem', 
+                        color: '#dc3545', 
+                        mb: 2 
+                      }} 
+                    />
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontSize: '1.5rem',
+                        fontWeight: 600,
+                        color: '#212529',
+                        mb: 2,
+                      }}
+                    >
+                      Admin Control Panel
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: '#6c757d',
+                        mb: 3,
+                      }}
+                    >
+                      Manage users, tournaments, announcements, and view detailed statistics
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      startIcon={<DashboardIcon />}
+                      onClick={() => navigate('/admin')}
+                      sx={{
+                        background: 'linear-gradient(135deg, #dc3545 0%, #b02a37 100%)',
+                        fontSize: '1.1rem',
+                        fontWeight: 500,
+                        py: 1.5,
+                        px: 4,
+                        '&:hover': {
+                          background: 'linear-gradient(135deg, #b02a37 0%, #8b1e2b 100%)',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 25px rgba(220, 53, 69, 0.3)',
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      Open Admin Dashboard
+                    </Button>
+                  </CardContent>
+                </WelcomeCard>
+              </Box>
+            )}
+
             <Box>
               <WelcomeCard>
                 <CardContent sx={{ p: 3 }}>
@@ -184,13 +246,27 @@ const Dashboard: React.FC = () => {
                       lineHeight: 1.6,
                     }}
                   >
-                    • View training schedule
-                    <br />
-                    • Update profile
-                    <br />
-                    • Contact instructor
-                    <br />
-                    • Join tournaments
+                    {user.role === 'admin' ? (
+                      <>
+                        • Approve pending users
+                        <br />
+                        • Create announcements
+                        <br />
+                        • Manage tournaments
+                        <br />
+                        • View system statistics
+                      </>
+                    ) : (
+                      <>
+                        • View training schedule
+                        <br />
+                        • Update profile
+                        <br />
+                        • Contact instructor
+                        <br />
+                        • Join tournaments
+                      </>
+                    )}
                   </Typography>
                 </CardContent>
               </WelcomeCard>

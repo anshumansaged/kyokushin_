@@ -17,6 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/dojos', require('./routes/dojos'));
+app.use('/api/admin', require('./routes/admin'));
+app.use('/api/announcements', require('./routes/announcements'));
+app.use('/api/tournaments', require('./routes/tournaments'));
+app.use('/api/bouts', require('./routes/bouts'));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/kyokushin-karate', {

@@ -71,6 +71,9 @@ const Navbar: React.FC = () => {
           <NavButton onClick={() => navigate('/')}>
             Home
           </NavButton>
+          <NavButton onClick={() => navigate('/tournaments')}>
+            Tournaments
+          </NavButton>
           <NavButton onClick={() => navigate('/about')}>
             About
           </NavButton>
